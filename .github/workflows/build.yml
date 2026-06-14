@@ -1,0 +1,57 @@
+# oqs-openssl-container: CI Build and Test
+#
+# This workflow builds and tests OQS-OpenSSL images on push to main branch.
+
+name: Build and Test
+
+on:
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+
+env:
+    REGISTRY: ghcr.io
+    IMAGE_ALpine: ${{ github.repository }}/oqs-openssl-alpine
+    IMAGE_DEBIAN: ${{ github.repository }}/oqs-openssl-debian
+
+jobs:
+    build-alpine:
+        name: Build and Test Alpine
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Build Alpine image
+              run: |
+                  ./build.sh \
+                    --base alpine \
+                    --tag oqs-openssl:alpine-latest \
+                    --no-test
+
+            - name: Test Alpine image
+              run: |
+                  ./scripts/test.sh --image oqs-openssl:alpine-latest
+
+    build-bookworm:
+        name: Build and Test Bookworm
+        runs-on: ubuntu-latest
+        permissions:
+            contents: read
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Build Bookworm image
+              run: |
+                  ./build.sh \
+                    --base debian-bookworm \
+                    --tag oqs-openssl:bookworm-latest \
+                    --no-test
+
+            - name: Test Bookworm image
+              run: |
+                  ./scripts/test.sh --image oqs-openssl:bookworm-latest
