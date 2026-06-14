@@ -1,0 +1,106 @@
+# oqs-openssl-container: Alpine Linux-based OpenSSL with OQS Provider
+#
+# This Containerfile builds OpenSSL 3.5.x with the Open Quantum Safe (OQS)
+# provider for post-quantum cryptography support.
+
+# Stage 1: Build OpenSSL, liboqs, and oqs-provider from source
+FROM docker.io/library/alpine:3.21 AS build
+
+# Version arguments
+ARG OPENSSL_VERSION=3.5.7
+ARG LIBOQS_VERSION=0.15.0
+ARG OQS_PROVIDER_VERSION=0.11.0
+
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    cmake \
+    ninja \
+    perl \
+    linux-headers \
+    openssl-dev \
+    ca-certificates \
+    git \
+    wget \
+    tar \
+    bash
+
+# Build OpenSSL
+RUN wget -q "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" \
+        -O /tmp/openssl-${OPENSSL_VERSION}.tar.gz && \
+    tar xzf /tmp/openssl-${OPENSSL_VERSION}.tar.gz -C /tmp && \
+    cd /tmp/openssl-${OPENSSL_VERSION} && \
+    ./config --prefix=/usr/local/ssl \
+             --openssldir=/usr/local/ssl \
+             shared \
+             '-Wl,-rpath,$(LIBRPATH)' && \
+    make -j"$(nproc)" && \
+    make install_sw && \
+    cd /tmp && rm -rf openssl-${OPENSSL_VERSION}*
+
+# Build liboqs
+RUN git clone --branch "${LIBOQS_VERSION}" --depth 1 \
+        https://github.com/open-quantum-safe/liboqs.git /tmp/liboqs && \
+    cd /tmp/liboqs && git checkout "${LIBOQS_VERSION}" && \
+    mkdir -p /tmp/liboqs/build && \
+    cd /tmp/liboqs && \
+    cmake -GNinja \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -S . -B /tmp/liboqs/build && \
+    cmake --build /tmp/liboqs/build && \
+    cmake --install /tmp/liboqs/build && \
+    cd /tmp && rm -rf liboqs
+
+# Build oqs-provider
+RUN git clone --branch "${OQS_PROVIDER_VERSION}" --depth 1 \
+        https://github.com/open-quantum-safe/oqs-provider.git /tmp/oqs-provider && \
+    cd /tmp/oqs-provider && git checkout "${OQS_PROVIDER_VERSION}" && \
+    mkdir -p /tmp/oqs-provider/build && \
+    cd /tmp/oqs-provider && \
+    cmake -GNinja \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DOPENSSL_ROOT_DIR=/usr/local/ssl \
+          -DCMAKE_INSTALL_PREFIX=/usr/local \
+          -S . -B /tmp/oqs-provider/build && \
+    cmake --build /tmp/oqs-provider/build && \
+    cmake --install /tmp/oqs-provider/build && \
+    cd /tmp && rm -rf oqs-provider
+
+# Bundle all built artifacts for the runtime stage
+RUN mkdir -p /oqs-dist && \
+    cp -a /usr/local/. /oqs-dist/
+
+# Stage 2: Runtime image (minimal)
+FROM docker.io/library/alpine:3.21 AS runtime
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    ca-certificates \
+    && rm -rf /var/cache/apk/*
+
+# Copy built artifacts from the build stage
+COPY --from=build /oqs-dist /usr/local
+
+# Replace system openssl with the compiled one and update symlinks
+RUN ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl && \
+    ln -sf /usr/local/ssl/bin/c_rehash /usr/bin/c_rehash && \
+    ln -sf /usr/local/ssl/lib/libssl.so /usr/lib/libssl.so && \
+    ln -sf /usr/local/ssl/lib/libcrypto.so /usr/lib/libcrypto.so && \
+    ln -sf /usr/local/ssl/lib/libssl.so.3 /usr/lib/libssl.so.3 && \
+    ln -sf /usr/local/ssl/lib/libcrypto.so.3 /usr/lib/libcrypto.so.3 && \
+    mkdir -p /etc/ssl/openssl.cnf.d
+
+COPY containerfiles/alpine/openssl.cnf /etc/ssl/openssl.cnf
+
+# Set environment variables for OpenSSL
+ENV LD_LIBRARY_PATH=/usr/local/lib \
+    OPENSSL_MODULES=/usr/local/ssl/lib64/ossl-modules \
+    OPENSSL_CONF=/etc/ssl/openssl.cnf \
+    OPENSSL_DIR=/usr/local/ssl
+
+# Create working directory
+WORKDIR /app
+
+# Default command
+CMD ["openssl", "version"]
