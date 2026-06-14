@@ -26,32 +26,6 @@ Technology Stack:
 - **liboqs** — Open source C library for quantum-safe cryptographic algorithms from the Open Quantum Safe project
 - **oqs-provider** — OpenSSL 3 provider enabling post-quantum algorithms via the provider interface
 
-### Architecture
-
-```mermaid
-graph TB
-    subgraph "Build Stage"
-        A[Alpine/Debian Base] --> B[Install Build Deps]
-        B --> C[Compile OpenSSL 3.5.7]
-        C --> D[Clone & Build liboqs 0.15.0]
-        D --> E[Clone & Build oqs-provider 0.11.0]
-        E --> F[Bundle Artifacts]
-    end
-
-    subgraph "Runtime Stage"
-        G[Minimal Alpine/Debian] --> H[Copy Artifacts]
-        H --> I[Configure Symlinks & Env]
-        I --> J[Load openssl.cnf]
-    end
-
-    F -->|COPY --from=build| G
-
-    J --> K[OQS-OpenSSL Container]
-
-    K --> L[Default Provider]
-    K --> M[OQS Provider - PQ Crypto]
-```
-
 ### Supported Base Images
 
 | Base OS              | Image Tag                     | Platform Support         |
