@@ -24,12 +24,15 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
+              continue-on-error: false
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
+              continue-on-error: false
 
             - name: Build Alpine image
               uses: docker/build-push-action@v6
+              continue-on-error: false
               with:
                   context: .
                   file: containerfiles/alpine/Containerfile
@@ -42,6 +45,7 @@ jobs:
             - name: Test Alpine image
               run: |
                   ./scripts/test.sh --image oqs-openssl:alpine-latest
+              continue-on-error: false
 
     build-bookworm:
         name: Build and Test Bookworm
@@ -51,12 +55,15 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
+              continue-on-error: false
 
             - name: Set up Docker Buildx
               uses: docker/setup-buildx-action@v3
+              continue-on-error: false
 
             - name: Build Bookworm image
               uses: docker/build-push-action@v6
+              continue-on-error: false
               with:
                   context: .
                   file: containerfiles/debian-bookworm/Containerfile
@@ -69,3 +76,4 @@ jobs:
             - name: Test Bookworm image
               run: |
                   ./scripts/test.sh --image oqs-openssl:bookworm-latest
+              continue-on-error: false
