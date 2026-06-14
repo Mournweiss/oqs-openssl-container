@@ -12,8 +12,8 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_ALpine: ${{ github.repository }}/oqs-openssl-alpine
-    IMAGE_DEBIAN: ${{ github.repository }}/oqs-openssl-debian
+    IMAGE_ALPINE: ${{ github.repository }}/oqs-openssl-alpine
+    IMAGE_BOOKWORM: ${{ github.repository }}/oqs-openssl-bookworm
 
 jobs:
     build-alpine:
@@ -25,12 +25,19 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
             - name: Build Alpine image
-              run: |
-                  ./build.sh \
-                    --base alpine \
-                    --tag oqs-openssl:alpine-latest \
-                    --no-test
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  file: containerfiles/alpine/Containerfile
+                  push: false
+                  load: true
+                  tags: oqs-openssl:alpine-latest
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
 
             - name: Test Alpine image
               run: |
@@ -45,12 +52,19 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v3
+
             - name: Build Bookworm image
-              run: |
-                  ./build.sh \
-                    --base debian-bookworm \
-                    --tag oqs-openssl:bookworm-latest \
-                    --no-test
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  file: containerfiles/debian-bookworm/Containerfile
+                  push: false
+                  load: true
+                  tags: oqs-openssl:bookworm-latest
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
 
             - name: Test Bookworm image
               run: |
