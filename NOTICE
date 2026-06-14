@@ -1,0 +1,161 @@
+OQS-OpenSSL Container
+Copyright 2026 Maxim Selin
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+--------------------------------------------------------------------------------
+THIRD-PARTY COMPONENTS
+--------------------------------------------------------------------------------
+
+This project incorporates or interacts with the following third-party
+components. Their respective licenses and copyright notices are provided
+below for informational purposes and do not modify the terms of this
+Apache 2.0 License.
+
+---
+
+1. OpenSSL
+   Repository: https://github.com/openssl/openssl
+   Copyright:  Copyright (c) 1998-2025 The OpenSSL Project Authors
+               Copyright (c) 1995-1998 Eric A. Young, Tim J. Hudson
+   License:    Apache License 2.0
+
+   This project compiles OpenSSL (v3.5.7) from source and bundles it
+   with the OQS provider for post-quantum cryptographic algorithm support.
+
+   Apache License 2.0 applies (see section 1 above).
+
+---
+
+2. liboqs (Open Quantum Safe)
+   Repository: https://github.com/open-quantum-safe/liboqs
+   Copyright:  Copyright (c) 2016-2025 Douglas Stebila and Michele Mosca
+               Copyright (c) 2016-2025, Open Quantum Safe contributors
+   License:    MIT License
+
+   This project uses liboqs (v0.15.0), an open source C library for
+   quantum-safe cryptographic algorithms including key encapsulation
+   mechanisms (KEM) and signature schemes.
+
+   MIT License:
+
+   Copyright (c) 2016-2025, Open Quantum Safe contributors
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+   Additional third-party components within liboqs are subject to their
+   respective licenses (BSD-3-Clause, Apache-2.0, CC0, MIT, ISC).
+   See https://github.com/open-quantum-safe/liboqs/blob/main/LICENSE.txt
+   for full details.
+
+---
+
+3. oqs-provider (Open Quantum Safe OpenSSL Provider)
+   Repository: https://github.com/open-quantum-safe/oqs-provider
+   Copyright:  Copyright (c) 2020-2025, Open Quantum Safe contributors
+   License:    MIT License
+
+   This project uses oqs-provider (v0.11.0), an OpenSSL 3 provider
+   that enables post-quantum cryptographic algorithms via the OpenSSL
+   provider interface.
+
+   MIT License:
+
+   Copyright (c) 2020-2025, Open Quantum Safe contributors
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+4. Alpine Linux
+   Repository: https://gitlab.alpinelinux.org/alpine/aports
+   Copyright:  Copyright (c) 2005-2025 Alpine Linux contributors
+   License:    MIT License
+
+   This project provides a Docker image based on Alpine Linux 3.21 as
+   one of the supported base operating systems.
+
+   MIT License:
+
+   Copyright (c) 2005-2025 Alpine Linux contributors
+
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files (the
+   "Software"), to deal in the Software without restriction, including
+   without limitation the rights to use, copy, modify, merge, publish,
+   distribute, sublicense, and/or sell copies of the Software, and to
+   permit persons to whom the Software is furnished to do so, subject to
+   the following conditions:
+
+   The above copyright notice and this permission notice shall be included
+   in all copies or substantial portions of the Software.
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+5. Debian
+   Repository: https://salsa.debian.org/debian/debian-handbook
+   Copyright:  Copyright (c) Debian developers and contributors
+   License:    Various (GPL, BSD, LGPL, and others)
+
+   This project provides a Docker image based on Debian Bookworm (12)
+   slim as one of the supported base operating systems.
+
+   Debian packages are distributed under various free software licenses,
+   primarily GPL, LGPL, BSD, and MIT licenses. See
+   https://www.debian.org/legal/licenses for full details.
+
+---
+
+END OF THIRD-PARTY COMPONENTS
