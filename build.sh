@@ -20,6 +20,7 @@ BASE="alpine"
 TAG="oqs-openssl:latest"
 CONTEXT_DIR="."
 BUILD_ARGS=()
+AUTO_TEST=true
 
 # Parse arguments
 parse_args() {
@@ -49,6 +50,14 @@ parse_args() {
                 BUILD_ARGS+=("--build-arg" "OQS_PROVIDER_VERSION=$2")
                 shift 2
                 ;;
+            --test)
+                AUTO_TEST=true
+                shift
+                ;;
+            --no-test)
+                AUTO_TEST=false
+                shift
+                ;;
             --help|-h)
                 print_usage
                 exit 0
@@ -71,7 +80,34 @@ print_usage() {
     info "  --openssl-version V         OpenSSL version (default: 3.5.7)"
     info "  --liboqs-version V          liboqs version (default: 0.15.0)"
     info "  --oqs-provider-version V    oqs-provider version (default: 0.11.0)"
+    info "  --test, --auto-test         Enable auto-testing after build (default: enabled)"
+    info "  --no-test, --no-auto-test   Disable auto-testing after build"
     info "  --help, -h                  Show this help message"
+}
+
+# Test a built Docker image
+test_image() {
+    local image="$1"
+    info ""
+    info "Running tests for: $image"
+
+    if ! docker image inspect "$image" >/dev/null 2>&1; then
+        warn "  Image '$image' not found, skipping tests"
+        return 1
+    fi
+
+    if [[ ! -x "./scripts/test.sh" ]]; then
+        warn "  test.sh not found or not executable, skipping tests"
+        return 1
+    fi
+
+    if ./scripts/test.sh --image "$image" 2>&1; then
+        success "  Tests passed for: $image"
+        return 0
+    else
+        warn "  Tests failed for: $image"
+        return 1
+    fi
 }
 
 # Determine Containerfile path for a given base
@@ -122,6 +158,13 @@ build_image() {
     fi
 
     success "Successfully built: $image_tag"
+
+    # Run auto-tests if enabled
+    if $AUTO_TEST; then
+        if ! test_image "$image_tag"; then
+            warn "  Auto-testing failed for: $image_tag"
+        fi
+    fi
 }
 
 # Main entry point
