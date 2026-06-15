@@ -23,8 +23,8 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_ALPINE: ${{ github.repository }}/oqs-openssl-alpine
-    IMAGE_BOOKWORM: ${{ github.repository }}/oqs-openssl-bookworm
+    IMAGE_ALPINE: mournweiss/oqs-openssl-alpine
+    IMAGE_BOOKWORM: mournweiss/oqs-openssl-bookworm
 
 jobs:
     publish-alpine:
@@ -58,7 +58,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.IMAGE_ALPINE }}
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_ALPINE }}
                   tags: |
                       type=ref,event=tag
                       type=raw,value=alpine-latest
@@ -109,7 +109,7 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.IMAGE_BOOKWORM }}
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_BOOKWORM }}
                   tags: |
                       type=ref,event=tag
                       type=raw,value=bookworm-latest

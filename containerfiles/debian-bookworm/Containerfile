@@ -87,7 +87,8 @@ RUN mkdir -p /etc/ld.so.conf.d && \
     ldconfig
 
 # Replace system openssl with the compiled one and update symlinks
-RUN ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl && \
+RUN mkdir -p /usr/lib/x86_64-linux-gnu && \
+    ln -sf /usr/local/ssl/bin/openssl /usr/bin/openssl && \
     ln -sf /usr/local/ssl/bin/c_rehash /usr/bin/c_rehash && \
     ln -sf /usr/local/ssl/lib64/libssl.so /usr/lib/x86_64-linux-gnu/libssl.so && \
     ln -sf /usr/local/ssl/lib64/libcrypto.so /usr/lib/x86_64-linux-gnu/libcrypto.so && \
