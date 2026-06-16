@@ -23,8 +23,7 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_ALPINE: mournweiss/oqs-openssl-alpine
-    IMAGE_BOOKWORM: mournweiss/oqs-openssl-bookworm
+    IMAGE_NAME: mournweiss/oqs-openssl
 
 jobs:
     publish-alpine:
@@ -58,11 +57,12 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_ALPINE }}
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=tag
-                      type=raw,value=alpine-latest
-                      type=sha,prefix=alpine-
+                      type=raw,value=latest-alpine,enable=${{ github.event_name == 'push' || github.event.inputs.base == 'all' || github.event.inputs.base == 'alpine' }}
+                      type=raw,value=${{ github.ref_name }}-alpine,enable=${{ github.event_name == 'push' || github.event.inputs.base == 'all' || github.event.inputs.base == 'alpine' }}
+                      type=raw,value=${{ github.sha }}-alpine,enable=${{ github.event_name == 'push' || github.event.inputs.base == 'all' || github.event.inputs.base == 'alpine' }}
               continue-on-error: false
 
             - name: Build and push Alpine image
@@ -109,11 +109,12 @@ jobs:
               id: meta
               uses: docker/metadata-action@v5
               with:
-                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_BOOKWORM }}
+                  images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
                   tags: |
                       type=ref,event=tag
-                      type=raw,value=bookworm-latest
-                      type=sha,prefix=bookworm-
+                      type=raw,value=latest-bookworm,enable=${{ github.event_name == 'push' || github.event.inputs.base == 'all' || github.event.inputs.base == 'debian-bookworm' }}
+                      type=raw,value=${{ github.ref_name }}-bookworm,enable=${{ github.event_name == 'push' || github.event.inputs.base == 'all' || github.event.inputs.base == 'debian-bookworm' }}
+                      type=raw,value=${{ github.sha }}-bookworm,enable=${{ github.event_name == 'push' || github.event.inputs.base == 'all' || github.event.inputs.base == 'debian-bookworm' }}
               continue-on-error: false
 
             - name: Build and push Bookworm image

@@ -12,8 +12,7 @@ on:
 
 env:
     REGISTRY: ghcr.io
-    IMAGE_ALPINE: ${{ github.repository }}/oqs-openssl-alpine
-    IMAGE_BOOKWORM: ${{ github.repository }}/oqs-openssl-bookworm
+    IMAGE_NAME: ${{ github.repository }}/oqs-openssl
 
 jobs:
     build-alpine:
